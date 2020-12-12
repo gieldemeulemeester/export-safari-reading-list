@@ -4,11 +4,14 @@
 
 Export Safari's reading list to webloc files.
 
-The Python script requires a `-i` or `--ifile` argument with the path to Safari's bookmarks file. Optionally, you can add a `-o` or `--opath` argument with the path to the output directory for the .webloc files. If ommitted, the .webloc files will be written to the current working directory.
+The Python script requires a `-i`/`--ifile` argument with the path to Safari's bookmarks file or a byte stream from `stdin`. Optionally, you can add a `-o` or `--opath` argument with the path to the output directory for the .webloc files. If omitted, the .webloc files will be written to the current working directory.
 
 Safari's `Bookmarks.plist` file can be found in `~/Library/Safari/`. However, this directory is by default no longer accessible with Terminal in macOS Mojave (10.14) or later. You can either copy this file somewhere accessible or [grant full disk access to Terminal](https://appletoolbox.com/seeing-error-operation-not-permitted-in-macos-mojave/).
 
-Usage example:
+Usage examples:
 ```shell
 python3 export_safari_reading_list.py -i ~/Desktop/Bookmarks.plist -o ~/Desktop/rlist
+```
+```shell
+cat ~/Desktop/Bookmarks.plist | export_safari_reading_list.py -o ~/Desktop/rlist
 ```
