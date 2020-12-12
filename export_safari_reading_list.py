@@ -16,12 +16,27 @@ def write_weblocs(plistDict, args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Export Safari reading list to webloc files.")
-    parser.add_argument("-i", "--ifile", type=str, required=True, dest="rlistFile", help="path to reading list plist file")
+    parser.add_argument("-i", "--ifile", type=str, dest="bookmarks", help="path to Safari's bookmarks file")
     parser.add_argument("-o", "--opath", type=str, dest="opath", help="output directory")
     parser.add_argument("-v", "--verbose", help="increase output verbosity", action="store_true")
     args = parser.parse_args()
 
-    rlist = plistlib.readPlist(args.rlistFile)
+    if args.bookmarks == None:
+        if sys.stdin.isatty():
+            print("the following arguments are required: -i/--ifile")
+            exit(1)
+        
+        rlist = plistlib.loads(sys.stdin.buffer.read())    
+    else:
+        try:
+            with open(args.bookmarks, 'rb') as f:
+                rlist = plistlib.load(f)
+        except FileNotFoundError:
+            print(f"the bookmarks file '{args.bookmarks}' was not found")
+            exit(1)
+        except PermissionError:
+            print(f"the bookmarks file '{args.bookmarks}' is not accessible")
+            exit(1)        
 
     if args.opath == None:
         args.opath = os.getcwd()
